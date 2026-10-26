@@ -1,0 +1,13 @@
+{
+  "text": "Ready",
+  "functionCalls": [],
+  "content": {
+    "parts": [
+      {
+        "text": "Ready",
+        "thoughtSignature": "EmAKXgFpFH0TJrdJVTQNpYxqrAG0MGEaK3p0PZs5zUuf292R9Annhtv2Q5zVTpZRYSltVTFY7RvJyqMz7gBSErbvftI6HLE4ZMg2CFBWZOhdVv9pA5OJlAgq2aZEMKYQts0="
+      }
+    ],
+    "role": "model"
+  }
+}
