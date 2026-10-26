@@ -1,0 +1,29 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "send_email",
+      "args": {
+        "body": "Cheapest flight: BudgetJet departing at 14:05 for Rs 4,899 (Delhi to Goa).",
+        "to": "me@example.com"
+      },
+      "id": "call_2937517"
+    }
+  ],
+  "content": {
+    "parts": [
+      {
+        "functionCall": {
+          "name": "send_email",
+          "args": {
+            "body": "Cheapest flight: BudgetJet departing at 14:05 for Rs 4,899 (Delhi to Goa).",
+            "to": "me@example.com"
+          },
+          "id": "call_2937517"
+        },
+        "thoughtSignature": "EmAKXgFpFH0TR8Sjod7a7H15V82T8Nr6LGcr/+7lkOwYexV48KqcaNBdXfPPcvFT8qb5YO0LCTW6HSM7Vy9KYlXmDZIM5Vx8tclhk8goZ3CHb/3ZSl2G7ee3syalxopHiLI="
+      }
+    ],
+    "role": "model"
+  }
+}

@@ -20,8 +20,9 @@ export type LLMResult = {
 let ai: GoogleGenAI | undefined;
 function client() {
   if (!ai) {
-    if (!process.env.GEMINI_API_KEY)
+    if (!process.env.GEMINI_API_KEY) {
       throw new Error("GEMINI_API_KEY missing in .env");
+    }
     ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
   }
 
@@ -85,11 +86,16 @@ export async function callLLM(params: {
         });
         lastCallAt = Date.now();
         stats.liveCalls++;
+        const parts: any[] = res.candidates?.[0]?.content?.parts ?? [];
+
         const out: LLMResult = {
-          text: res.text ?? "",
-          functionCalls: res.functionCalls ?? [],
+          text: parts.map((p) => p.text ?? "").join(""),
+          functionCalls: parts
+            .filter((p) => p.functionCall)
+            .map((p) => p.functionCall),
           content: res.candidates?.[0]?.content ?? null,
         };
+        
         await mkdir(CACHE_DIR, { recursive: true });
         await writeFile(file, JSON.stringify(out, null, 2));
         return out;

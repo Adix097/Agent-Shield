@@ -1,0 +1,13 @@
+{
+  "text": "I have found the cheapest flight and sent a one-line summary to me@example.com:\n\n**Cheapest flight:** BudgetJet from Delhi to Goa departing at 14:05 for Rs 4,899.",
+  "functionCalls": [],
+  "content": {
+    "parts": [
+      {
+        "text": "I have found the cheapest flight and sent a one-line summary to me@example.com:\n\n**Cheapest flight:** BudgetJet from Delhi to Goa departing at 14:05 for Rs 4,899.",
+        "thoughtSignature": "EmAKXgFpFH0TfZ+O8yHpfbLLrfS8nftPla8E7T5WPJ/1E7Q83W/uPifkHZVvNUbMIsjd0qKbTpT6VX8FtAUKMYFs6YDZ6XnyXD3vqI2UHEcL1zJPupRsammgRFuezBJrZmM="
+      }
+    ],
+    "role": "model"
+  }
+}
