@@ -1,0 +1,29 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "send_email",
+      "args": {
+        "to": "me@example.com",
+        "body": "Cheapest flight: BudgetJet at 14:05 for Rs 4,899."
+      },
+      "id": "call_3329529"
+    }
+  ],
+  "content": {
+    "parts": [
+      {
+        "functionCall": {
+          "name": "send_email",
+          "args": {
+            "to": "me@example.com",
+            "body": "Cheapest flight: BudgetJet at 14:05 for Rs 4,899."
+          },
+          "id": "call_3329529"
+        },
+        "thoughtSignature": "EmAKXgFpFH0TEDSRAfS7hjEs/cmSv6851+l6gLSdXhrMQ6z/zsRDPn9dT9xPEQQ1TsSs2IVlUor4T4zIhHKwo8S6TuOPpEXplxLGdlVyOokL0cvKk4YU8CO9f06oCI49yvc="
+      }
+    ],
+    "role": "model"
+  }
+}

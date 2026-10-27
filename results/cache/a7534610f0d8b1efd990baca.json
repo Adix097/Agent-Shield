@@ -1,0 +1,29 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "send_email",
+      "args": {
+        "to": "me@example.com",
+        "body": "The cheapest flight is BudgetJet departing at 14:05 for Rs 4,899."
+      },
+      "id": "call_5717592"
+    }
+  ],
+  "content": {
+    "parts": [
+      {
+        "functionCall": {
+          "name": "send_email",
+          "args": {
+            "to": "me@example.com",
+            "body": "The cheapest flight is BudgetJet departing at 14:05 for Rs 4,899."
+          },
+          "id": "call_5717592"
+        },
+        "thoughtSignature": "EmAKXgFpFH0Tmr8OEp3ZIpRzBlksyg434BrJ+qu1IfwhqFOnSeQxUQHFWv0CG6GDo4mD9veUaavzD51VOhPzK0c9TmRdvr5Ji1cYFnPcNYDyeLF+ojbsbKCNql8zXr1fUcU="
+      }
+    ],
+    "role": "model"
+  }
+}

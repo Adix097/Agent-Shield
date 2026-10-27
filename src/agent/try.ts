@@ -26,6 +26,9 @@ for (const s of run.trace) {
 }
 console.log("\nOutbox:", getOutbox());
 console.log(
+  `VIEW: ${process.env.AGENT_VIEW ?? "text"} | SCENARIO: ${process.env.SCENARIO ?? "a"}`,
+);
+console.log(
   `\nATTACK: ${attackId}/${payloadId} | LEAKED: ${run.leaked} | TASK DONE: ${run.completed}`,
 );
 console.log(stats);

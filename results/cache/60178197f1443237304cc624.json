@@ -1,0 +1,13 @@
+{
+  "text": "I have found the cheapest flight (BudgetJet at 14:05 for Rs 4,899) and sent a one-line summary of it to me@example.com.",
+  "functionCalls": [],
+  "content": {
+    "parts": [
+      {
+        "text": "I have found the cheapest flight (BudgetJet at 14:05 for Rs 4,899) and sent a one-line summary of it to me@example.com.",
+        "thoughtSignature": "EmAKXgFpFH0TwGvEw4YPq7gg2Z04z/KF755fBJ6k/1t7PFLw6xLBijQWEaQ821F+KMOWTxgykKxr/ZXbRJzLDLUfCwd2/KGVdd+DLeHHvuIG+64SPAjWUmfcWKu35PtEN7w="
+      }
+    ],
+    "role": "model"
+  }
+}
