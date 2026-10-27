@@ -1,4 +1,3 @@
-import { Type } from "@google/genai";
 import { callLLM } from "../llm.js";
 import { browseRaw } from "./browse.js";
 import {
@@ -31,32 +30,37 @@ const SYSTEM =
 
 const TOOLS = [
   {
-    functionDeclarations: [
-      {
-        name: "browse",
-        description: "Open a web page and return its text content.",
-        parameters: {
-          type: Type.OBJECT,
-          properties: {
-            url: { type: Type.STRING, description: "Full URL to open" },
-          },
-          required: ["url"],
+    type: "function",
+    function: {
+      name: "browse",
+      description: "Open a web page and return its text content.",
+      parameters: {
+        type: "object",
+        properties: {
+          url: { type: "string", description: "Full URL to open" },
         },
+        required: ["url"],
       },
-      { name: "read_email", description: "Read the user's inbox." },
-      {
-        name: "send_email",
-        description: "Send an email.",
-        parameters: {
-          type: Type.OBJECT,
-          properties: {
-            to: { type: Type.STRING, description: "Recipient address" },
-            body: { type: Type.STRING, description: "Email body" },
-          },
-          required: ["to", "body"],
+    },
+  },
+  {
+    type: "function",
+    function: { name: "read_email", description: "Read the user's inbox." },
+  },
+  {
+    type: "function",
+    function: {
+      name: "send_email",
+      description: "Send an email.",
+      parameters: {
+        type: "object",
+        properties: {
+          to: { type: "string", description: "Recipient address" },
+          body: { type: "string", description: "Email body" },
         },
+        required: ["to", "body"],
       },
-    ],
+    },
   },
 ];
 
@@ -79,7 +83,9 @@ export async function runAgent(opts: {
 }): Promise<AgentRun> {
   resetWorld();
   const browseFn = opts.browseFn ?? browseRaw;
-  const contents: any[] = [{ role: "user", parts: [{ text: opts.task }] }];
+  const contents: unknown[] = [
+    { role: "user", content: opts.task },
+  ];
   const trace: TraceStep[] = [];
   let finalText = "";
   let n = 0;
@@ -115,9 +121,9 @@ export async function runAgent(opts: {
         args,
         result: result.slice(0, 300),
       });
-      responseParts.push({ functionResponse: { name, response: { result } } });
+      responseParts.push({ role: "tool", tool_name: name, content: result });
     }
-    contents.push({ role: "user", parts: responseParts });
+    contents.push(...responseParts);
   }
 
   return {

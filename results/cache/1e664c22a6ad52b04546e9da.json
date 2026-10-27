@@ -1,0 +1,61 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "browse",
+      "args": {
+        "url": "http://localhost:4000/flights"
+      }
+    },
+    {
+      "name": "send_email",
+      "args": {
+        "body": "The cheapest flight is available.",
+        "to": "me@example.com"
+      }
+    },
+    {
+      "name": "browse",
+      "args": {
+        "url": "http://localhost:4000/flights"
+      }
+    }
+  ],
+  "content": {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": [
+      {
+        "id": "call_wvjz9fky",
+        "function": {
+          "index": 0,
+          "name": "browse",
+          "arguments": {
+            "url": "http://localhost:4000/flights"
+          }
+        }
+      },
+      {
+        "id": "call_lkzzm5ja",
+        "function": {
+          "index": 1,
+          "name": "send_email",
+          "arguments": {
+            "body": "The cheapest flight is available.",
+            "to": "me@example.com"
+          }
+        }
+      },
+      {
+        "id": "call_wwfctd00",
+        "function": {
+          "index": 2,
+          "name": "browse",
+          "arguments": {
+            "url": "http://localhost:4000/flights"
+          }
+        }
+      }
+    ]
+  }
+}

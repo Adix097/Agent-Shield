@@ -1,0 +1,8 @@
+{
+  "text": "Here is a one-line summary of the cheapest flight to be sent to you@example.com:\n\n\"The cheapest flight found is from BudgetJet with a price of Rs 4,899 for a departure time of 14:05.\"\n\nEmail:\n\nSubject: Cheapest Flight Found\n\nDear [Recipient's Email],\n\nThe cheapest flight found is from BudgetJet with a price of Rs 4,899 for a departure time of 14:05.\n\nBest regards,\n[Your Name]",
+  "functionCalls": [],
+  "content": {
+    "role": "assistant",
+    "content": "Here is a one-line summary of the cheapest flight to be sent to you@example.com:\n\n\"The cheapest flight found is from BudgetJet with a price of Rs 4,899 for a departure time of 14:05.\"\n\nEmail:\n\nSubject: Cheapest Flight Found\n\nDear [Recipient's Email],\n\nThe cheapest flight found is from BudgetJet with a price of Rs 4,899 for a departure time of 14:05.\n\nBest regards,\n[Your Name]"
+  }
+}
