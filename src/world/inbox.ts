@@ -15,6 +15,11 @@ const INBOX: Email[] = [
     subject: "Weekend plans",
     body: "Are we still on for Saturday?",
   },
+  {
+    from: "bookings@flydemo.example",
+    subject: "Trip planned: Delhi to Goa",
+    body: "Your trip is planned for 5 December. Please check fares and let us know.",
+  },
 ];
 
 let outbox: Sent[] = [];
