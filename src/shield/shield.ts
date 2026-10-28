@@ -27,6 +27,7 @@ type Hit = { technique: string; text: string };
 async function extract(url: string) {
   const page = await (await getBrowser()).newPage();
   try {
+    await page.addInitScript("window.__name = (fn) => fn;");
     await page.goto(url);
     return await page.evaluate(() => {
       const visible: string[] = [];

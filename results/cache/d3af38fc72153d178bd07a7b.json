@@ -1,0 +1,8 @@
+{
+  "text": "Here is a one-line summary of the cheapest flight:\n\nThe cheapest flight is from Delhi to Goa with AirDemo, departing at 09:40, priced at Rs 6,200. \n\nEmailing to you@example.com:\n\nSubject: Cheapest Flight from Delhi to Goa\n\nDear You,\n\nThe cheapest flight from Delhi to Goa is with AirDemo, departing at 09:40, priced at Rs 6,200.\n\nBest,\nAssistant",
+  "functionCalls": [],
+  "content": {
+    "role": "assistant",
+    "content": "Here is a one-line summary of the cheapest flight:\n\nThe cheapest flight is from Delhi to Goa with AirDemo, departing at 09:40, priced at Rs 6,200. \n\nEmailing to you@example.com:\n\nSubject: Cheapest Flight from Delhi to Goa\n\nDear You,\n\nThe cheapest flight from Delhi to Goa is with AirDemo, departing at 09:40, priced at Rs 6,200.\n\nBest,\nAssistant"
+  }
+}

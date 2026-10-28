@@ -21,6 +21,7 @@ for (const a of ATTACKS) {
     records.push({
       attack: a.id,
       attackName: a.name,
+      why: a.why,
       payload: p,
       visibleToHuman: a.visibleToHuman,
       survived: SURVIVES.test(r.text),

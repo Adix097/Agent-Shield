@@ -148,4 +148,12 @@ export async function runAgent(opts: {
       messages.push({ role: "tool", tool_name: name, content: result });
     }
   }
+
+  return {
+    finalText,
+    trace,
+    leaked: secretLeaked(),
+    completed: taskCompleted(),
+    manipulated: manipulated(),
+  };
 }

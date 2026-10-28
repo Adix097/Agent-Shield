@@ -34,10 +34,10 @@ for (const s of run.trace) {
 }
 console.log("\nOutbox:", getOutbox());
 console.log(
-  `VIEW: ${process.env.AGENT_VIEW ?? "text"} | SCENARIO: ${process.env.SCENARIO ?? "a"}`,
+  `MODEL: ${process.env.OLLAMA_MODEL} | VIEW: ${process.env.AGENT_VIEW ?? "text"} | SHIELD: ${shieldOn ? "on" : "off"}`,
 );
 console.log(
-  `\nATTACK: ${attackId}/${payloadId} | LEAKED: ${run.leaked} | TASK DONE: ${run.completed}`,
+  `ATTACK: ${attackId}/${payloadId} | LEAKED: ${run.leaked} | MANIPULATED: ${run.manipulated} | TASK DONE: ${run.completed}`,
 );
 console.log(stats);
 

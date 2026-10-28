@@ -3,10 +3,9 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const MODEL = process.env.OLLAMA_MODEL;
-const OLLAMA_HOST = (process.env.OLLAMA_HOST ?? "http://127.0.0.1:11434").replace(
-  /\/$/,
-  "",
-);
+const OLLAMA_HOST = (
+  process.env.OLLAMA_HOST ?? "http://127.0.0.1:11434"
+).replace(/\/$/, "");
 const MODE = process.env.LLM_MODE ?? "live";
 const MIN_GAP_MS = Number(process.env.LLM_MIN_GAP_MS ?? 4000);
 const MAX_RETRIES = 6;
@@ -105,9 +104,7 @@ export async function callLLM(params: {
             model: MODEL,
             messages: toOllamaMessages(params.contents),
             stream: false,
-            ...(typeof config.systemInstruction === "string"
-              ? { system: config.systemInstruction }
-              : {}),
+            options: { num_ctx: Number(process.env.OLLAMA_NUM_CTX ?? 8192) },
             ...(Array.isArray(config.tools) ? { tools: config.tools } : {}),
           }),
         });
@@ -138,7 +135,7 @@ export async function callLLM(params: {
           functionCalls,
           content: message,
         };
-        
+
         await mkdir(CACHE_DIR, { recursive: true });
         await writeFile(file, JSON.stringify(out, null, 2));
         return out;
