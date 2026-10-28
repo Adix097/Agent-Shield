@@ -6,7 +6,9 @@ import {
   resetWorld,
   secretLeaked,
   taskCompleted,
+  manipulated,
 } from "../world/inbox.js";
+import type { Gate } from "../shield/gate.js";
 
 export type TraceStep = {
   n: number;
@@ -22,6 +24,7 @@ export type AgentRun = {
   trace: TraceStep[];
   leaked: boolean;
   completed: boolean;
+  manipulated: boolean;
 };
 
 const SYSTEM =
@@ -45,7 +48,11 @@ const TOOLS = [
   },
   {
     type: "function",
-    function: { name: "read_email", description: "Read the user's inbox." },
+    function: {
+      name: "read_email",
+      description: "Read the user's inbox.",
+      parameters: { type: "object", properties: {} },
+    },
   },
   {
     type: "function",
@@ -78,22 +85,52 @@ async function runTool(
 export async function runAgent(opts: {
   task: string;
   variant?: number;
-  browseFn?: (url: string) => Promise<string>; // the Shield will plug in here later
+  browseFn?: (url: string) => Promise<string>; // the Shield plugs in here
+  gate?: Gate;
   maxSteps?: number;
 }): Promise<AgentRun> {
   resetWorld();
   const browseFn = opts.browseFn ?? browseRaw;
-  const contents: unknown[] = [
-    { role: "user", content: opts.task },
-  ];
   const trace: TraceStep[] = [];
   let finalText = "";
   let n = 0;
 
+  const exec = async (name: string, args: Record<string, string>) => {
+    let result: string;
+    if (opts.gate && name === "send_email") {
+      const v = await opts.gate.checkSend(args.to, args.body);
+      if (!v.allowed) {
+        result = "BLOCKED: the user did not approve sending this email.";
+        trace.push({ n: ++n, kind: "tool", name, args, result });
+        return result;
+      }
+    }
+    try {
+      result = await runTool(name, args, browseFn);
+    } catch (e) {
+      result = `Tool error: ${String(e)}`;
+    }
+    if (opts.gate && name === "browse") opts.gate.markUntrusted();
+    if (opts.gate && name === "read_email") opts.gate.noteInbox(result);
+    trace.push({
+      n: ++n,
+      kind: "tool",
+      name,
+      args,
+      result: result.slice(0, 300),
+    });
+    return result;
+  };
+
+  const messages: any[] = [
+    { role: "system", content: SYSTEM },
+    { role: "user", content: opts.task },
+  ];
+
   for (let i = 0; i < (opts.maxSteps ?? 8); i++) {
     const res = await callLLM({
-      contents,
-      config: { systemInstruction: SYSTEM, tools: TOOLS },
+      contents: messages,
+      config: { tools: TOOLS },
       variant: opts.variant,
     });
     trace.push({ n: ++n, kind: "model", text: res.text });
@@ -103,33 +140,12 @@ export async function runAgent(opts: {
       break;
     }
 
-    contents.push(res.content);
-    const responseParts: any[] = [];
+    messages.push(res.content);
     for (const call of res.functionCalls) {
       const name = call.name ?? "";
       const args = (call.args ?? {}) as Record<string, string>;
-      let result: string;
-      try {
-        result = await runTool(name, args, browseFn);
-      } catch (e) {
-        result = `Tool error: ${String(e)}`;
-      }
-      trace.push({
-        n: ++n,
-        kind: "tool",
-        name,
-        args,
-        result: result.slice(0, 300),
-      });
-      responseParts.push({ role: "tool", tool_name: name, content: result });
+      const result = await exec(name, args);
+      messages.push({ role: "tool", tool_name: name, content: result });
     }
-    contents.push(...responseParts);
   }
-
-  return {
-    finalText,
-    trace,
-    leaked: secretLeaked(),
-    completed: taskCompleted(),
-  };
 }
