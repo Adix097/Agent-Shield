@@ -185,7 +185,3 @@ src/shield/     Content shield, detector, gate, and evaluations
 src/world/      Local pages, inbox, server, and demo state
 results/        Evaluation outputs, logs, and model-response cache
 ```
-
-## License
-
-This project currently uses the ISC license declared in `package.json`.
