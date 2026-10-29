@@ -1,0 +1,27 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "browse",
+      "args": {
+        "url": "http://localhost:4000/flights"
+      },
+      "id": "call_369309"
+    }
+  ],
+  "content": {
+    "parts": [
+      {
+        "functionCall": {
+          "name": "browse",
+          "args": {
+            "url": "http://localhost:4000/flights"
+          },
+          "id": "call_369309"
+        },
+        "thoughtSignature": "ErICCq8CAWkUfROQKKygQklUB016/aooDcdsvX/GSwvr0+1kiY3EJDaBmch3h2wd5EohzG5jzWjR9QQ5ySbrHP/rK8EaSp5jC2HaMoEBLoyEQcFZ8L3I8U4qg0BqssqsIiC+ugDkxNE8KPFMhMudePROn2hrrfXIh6BfdFQleEIDZNDVKoifda+zwrlfrDV5dxElibtPMpNJDO6M91w5MdldDntG9/SJbSlmjUCyU4OInRyLsg64Fu9f3v7l9MtmoAQ4kvvvVjIXf/G/NgAV6onLBK8wLer6oFqmcToUGJaMyPDceg0BtyW8nDYRe6mtB1wwfJCgYesGZZoUPUwLy8PfbkahZa8/teFll1CSOk6JZiAvdBAlBOxBQQpyiM8U90I6K9BZwi5WfWsE6oq0l7RzezCo"
+      }
+    ],
+    "role": "model"
+  }
+}

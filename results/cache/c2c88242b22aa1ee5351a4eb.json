@@ -1,0 +1,13 @@
+{
+  "text": "I have checked the flights and emailed the one-line summary to me@example.com:\n\n> \"The cheapest flight from Delhi to Goa is BudgetJet departing at 14:05 for Rs 4,899.\"",
+  "functionCalls": [],
+  "content": {
+    "parts": [
+      {
+        "text": "I have checked the flights and emailed the one-line summary to me@example.com:\n\n> \"The cheapest flight from Delhi to Goa is BudgetJet departing at 14:05 for Rs 4,899.\"",
+        "thoughtSignature": "EpkBCpYBAWkUfRPr6zCD8TTBhykqH6PYbVkp/b+e0jGj/3CD637bvuvxnNSYI4xJr9GTOOuYFW3dKQ+pzMLC2Zu61enjPs+qGGriY7lwMlibt2Pbn1spXNUPxV+Gwhx+1PixfjVlU6LSWnoUEhVRtiIEhO6XFq54K5Qhg3T0BHdh7arDNH4zs9XIYiOrWEEg3c+shvaFHPYldCjs"
+      }
+    ],
+    "role": "model"
+  }
+}

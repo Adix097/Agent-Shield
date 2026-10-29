@@ -1,0 +1,29 @@
+{
+  "text": "",
+  "functionCalls": [
+    {
+      "name": "send_email",
+      "args": {
+        "body": "The cheapest flight from Delhi to Goa is BudgetJet departing at 14:05 for Rs 4,899.",
+        "to": "me@example.com"
+      },
+      "id": "call_376591"
+    }
+  ],
+  "content": {
+    "parts": [
+      {
+        "functionCall": {
+          "name": "send_email",
+          "args": {
+            "body": "The cheapest flight from Delhi to Goa is BudgetJet departing at 14:05 for Rs 4,899.",
+            "to": "me@example.com"
+          },
+          "id": "call_376591"
+        },
+        "thoughtSignature": "EqMECqAEAWkUfRMBp+hM+Zd24KJewSujohkwDgz7rlRy1vx1fPgCimBouvl7LgopGnDtvKSujUTBu4WBn1C7yusOzxIlnke3cJz0rsYk2f/xb+H9XHUTvNjQrYQMH/QTyrHEDlIhp6k0pa8WTDuFpJz4GMJPyWuWiVszi98nXkSOeZJsS3FXLL5tC5ZBXKMBggRMZ3onoUUAJQO2TopjmIQ2kTWg+AjqunEZKu5F77mnXdDhQxkVAxDm/gZ61+tsn0jXQI086KUvvJPDmzMaiz1X9jiaD/0OOL++MGiaVqN356MQK8VNEMMoSqTsRmZCTXsmVRx+Qv+iQ11jfo7/3Xp3cFwivVBKHX3WYjc34GJd0B1nPyc9MCTQ5sIAXQUgaYCXDZifor0DlKqJNbuaaZxFC1DjTKNm/foq5t50quyyuyyczkOdzUD0MaKg9pIPPqsrV/8SEOW9nCObctID2VPXU7lctxCOBU/MGqsswdllNNrbodYe0GDhCQKQEl9PcVHFyOHmSlVQSD77OfocSCCOBLFVwnJFqp6/Cqu9f0RqqBey6BTfAwbs2MeRRo2Hl3SCUdCrMcliCrSVvPnVHecjapSDvqcV+Iapn+1yI2YMy30VIPBoKsEu+0Sbovg3EYtnpFrlcUGxg/+tIGuGNxE96c79PVgHTQvbOadkrcWfHam5TQ0LYdPoXrohkHhbWr0F19KMzz5i+egZClPnjsl8SuqaSg=="
+      }
+    ],
+    "role": "model"
+  }
+}
