@@ -104,7 +104,12 @@ export async function callLLM(params: {
             model: MODEL,
             messages: toOllamaMessages(params.contents),
             stream: false,
-            options: { num_ctx: Number(process.env.OLLAMA_NUM_CTX ?? 8192) },
+            keep_alive: "30m", // keep the model in memory between runs
+            options: {
+              num_ctx: Number(process.env.OLLAMA_NUM_CTX ?? 4096),
+              num_predict: Number(process.env.OLLAMA_NUM_PREDICT ?? 256), // cap the reply length
+            },
+            ...(process.env.OLLAMA_NO_THINK === "1" ? { think: false } : {}),
             ...(Array.isArray(config.tools) ? { tools: config.tools } : {}),
           }),
         });
