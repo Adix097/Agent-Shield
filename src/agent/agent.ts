@@ -1,4 +1,5 @@
 import { callLLM } from "../llm.js";
+import { Type } from "@google/genai";
 import { browseRaw } from "./browse.js";
 import {
   readEmail,
@@ -33,41 +34,38 @@ const SYSTEM =
 
 const TOOLS = [
   {
-    type: "function",
-    function: {
+    functionDeclarations: [{
       name: "browse",
       description: "Open a web page and return its text content.",
       parameters: {
-        type: "object",
+        type: Type.OBJECT,
         properties: {
-          url: { type: "string", description: "Full URL to open" },
+          url: { type: Type.STRING, description: "Full URL to open" },
         },
         required: ["url"],
       },
-    },
+    }],
   },
   {
-    type: "function",
-    function: {
+    functionDeclarations: [{
       name: "read_email",
       description: "Read the user's inbox.",
-      parameters: { type: "object", properties: {} },
-    },
+      parameters: { type: Type.OBJECT, properties: {} },
+    }],
   },
   {
-    type: "function",
-    function: {
+    functionDeclarations: [{
       name: "send_email",
       description: "Send an email.",
       parameters: {
-        type: "object",
+        type: Type.OBJECT,
         properties: {
-          to: { type: "string", description: "Recipient address" },
-          body: { type: "string", description: "Email body" },
+          to: { type: Type.STRING, description: "Recipient address" },
+          body: { type: Type.STRING, description: "Email body" },
         },
         required: ["to", "body"],
       },
-    },
+    }],
   },
 ];
 
@@ -122,15 +120,14 @@ export async function runAgent(opts: {
     return result;
   };
 
-  const messages: any[] = [
-    { role: "system", content: SYSTEM },
-    { role: "user", content: opts.task },
+  const messages: Record<string, unknown>[] = [
+    { role: "user", parts: [{ text: opts.task }] },
   ];
 
   for (let i = 0; i < (opts.maxSteps ?? 8); i++) {
     const res = await callLLM({
       contents: messages,
-      config: { tools: TOOLS },
+      config: { systemInstruction: SYSTEM, tools: TOOLS },
       variant: opts.variant,
     });
     trace.push({ n: ++n, kind: "model", text: res.text });
@@ -140,12 +137,17 @@ export async function runAgent(opts: {
       break;
     }
 
-    messages.push(res.content);
+    if (res.content && typeof res.content === "object") {
+      messages.push(res.content as Record<string, unknown>);
+    }
     for (const call of res.functionCalls) {
       const name = call.name ?? "";
       const args = (call.args ?? {}) as Record<string, string>;
       const result = await exec(name, args);
-      messages.push({ role: "tool", tool_name: name, content: result });
+      messages.push({
+        role: "user",
+        parts: [{ functionResponse: { name, response: { result } } }],
+      });
     }
   }
 

@@ -1,11 +1,9 @@
 import "dotenv/config";
+import { GoogleGenAI, type ContentListUnion } from "@google/genai";
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
-const MODEL = process.env.OLLAMA_MODEL;
-const OLLAMA_HOST = (
-  process.env.OLLAMA_HOST ?? "http://127.0.0.1:11434"
-).replace(/\/$/, "");
+const MODEL = process.env.GEMINI_MODEL;
 const MODE = process.env.LLM_MODE ?? "live";
 const MIN_GAP_MS = Number(process.env.LLM_MIN_GAP_MS ?? 4000);
 const MAX_RETRIES = 6;
@@ -19,7 +17,7 @@ export type LLMResult = {
   content: unknown;
 };
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 let chain: Promise<unknown> = Promise.resolve();
 let lastCallAt = 0;
@@ -32,51 +30,50 @@ function enqueue<T>(fn: () => Promise<T>): Promise<T> {
 
 function isRetryable(err: unknown) {
   const msg = String((err as { message?: unknown })?.message ?? err);
-
-  return /429|500|502|503|504|overloaded|timed out|fetch failed/i.test(msg);
+  return /429|500|503|overloaded/i.test(msg) && !/daily.?quota.?exceeded/i.test(msg);
 }
 
-function toOllamaMessages(contents: unknown) {
-  if (typeof contents === "string") {
-    return [{ role: "user", content: contents }];
-  }
-
-  if (!Array.isArray(contents)) return contents;
-
-  return contents.map((message) => {
-    if (!message || typeof message !== "object") return message;
-    const item = message as Record<string, unknown>;
-    if (item.role === "tool") return item;
-    if (typeof item.content === "string") {
-      return item;
-    }
-
-    const parts = Array.isArray(item.parts) ? item.parts : [];
-    const text = parts
+function extractResponse(response: {
+  functionCalls?: { name?: string; args?: Record<string, unknown> }[];
+  text?: string;
+  candidates?: {
+    content?: {
+      parts?: {
+        text?: string;
+        functionCall?: { name?: string; args?: Record<string, unknown> };
+      }[];
+    };
+  }[];
+}) {
+  const parts = response.candidates?.[0]?.content?.parts ?? [];
+  const functionCalls =
+    response.functionCalls ??
+    parts
+      .map((part) => part.functionCall)
       .filter(
-        (part): part is { text: string } =>
-          !!part &&
-          typeof part === "object" &&
-          typeof (part as Record<string, unknown>).text === "string",
-      )
+        (call): call is { name?: string; args?: Record<string, unknown> } =>
+          call !== undefined,
+      );
+  const text =
+    response.text ??
+    parts
       .map((part) => part.text)
+      .filter((part): part is string => part !== undefined)
       .join("");
 
-    return { role: item.role, content: text };
-  });
+  return { text, functionCalls };
 }
 
-// `variant` repeat the same prompt on purpose (e.g. run 1, 2, 3)
-// without the cache returning the identical answer each time.
+// `variant` repeats the same prompt on purpose without returning the cached answer.
 export async function callLLM(params: {
   contents: unknown;
   config?: Record<string, unknown>;
   variant?: number;
 }): Promise<LLMResult> {
-  if (!MODEL) throw new Error("OLLAMA_MODEL missing in .env");
+  if (!MODEL) throw new Error("GEMINI_MODEL missing in .env");
 
   const key = createHash("sha256")
-    .update(JSON.stringify({ MODEL, ...params }))
+    .update(JSON.stringify({ model: MODEL, ...params }))
     .digest("hex")
     .slice(0, 24);
   const file = `${CACHE_DIR}/${key}.json`;
@@ -85,60 +82,43 @@ export async function callLLM(params: {
     const hit = JSON.parse(await readFile(file, "utf8")) as LLMResult;
     stats.cacheHits++;
     return hit;
-  } catch {}
+  } catch {
+    // A missing or unreadable cache entry is handled by live/replay mode below.
+  }
 
   if (MODE === "replay") {
     throw new Error("replay mode: no recorded response for this call");
   }
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("GEMINI_API_KEY missing in .env");
+  }
 
   return enqueue(async () => {
+    try {
+      const hit = JSON.parse(await readFile(file, "utf8")) as LLMResult;
+      stats.cacheHits++;
+      return hit;
+    } catch {
+      // Another queued call may have populated the cache; continue to Gemini.
+    }
+
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     for (let attempt = 0; ; attempt++) {
       const wait = lastCallAt + MIN_GAP_MS - Date.now();
       if (wait > 0) await sleep(wait);
       try {
-        const config = params.config ?? {};
-        const response = await fetch(`${OLLAMA_HOST}/api/chat`, {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({
-            model: MODEL,
-            messages: toOllamaMessages(params.contents),
-            stream: false,
-            keep_alive: "30m", // keep the model in memory between runs
-            options: {
-              num_ctx: Number(process.env.OLLAMA_NUM_CTX ?? 4096),
-              num_predict: Number(process.env.OLLAMA_NUM_PREDICT ?? 256), // cap the reply length
-            },
-            ...(process.env.OLLAMA_NO_THINK === "1" ? { think: false } : {}),
-            ...(Array.isArray(config.tools) ? { tools: config.tools } : {}),
-          }),
+        const response = await ai.models.generateContent({
+          model: MODEL,
+          contents: params.contents as ContentListUnion,
+          config: params.config,
         });
-        if (!response.ok) {
-          throw new Error(
-            `Ollama request failed (${response.status}): ${await response.text()}`,
-          );
-        }
-        const res = (await response.json()) as {
-          message?: {
-            role?: string;
-            content?: string;
-            tool_calls?: {
-              function?: { name?: string; arguments?: Record<string, unknown> };
-            }[];
-          };
-        };
         lastCallAt = Date.now();
         stats.liveCalls++;
-        const message = res.message ?? {};
-        const functionCalls = (message.tool_calls ?? []).map((call) => ({
-          name: call.function?.name,
-          args: call.function?.arguments ?? {},
-        }));
-
+        const extracted = extractResponse(response);
         const out: LLMResult = {
-          text: message.content ?? "",
-          functionCalls,
-          content: message,
+          text: extracted.text,
+          functionCalls: extracted.functionCalls,
+          content: response.candidates?.[0]?.content ?? response,
         };
 
         await mkdir(CACHE_DIR, { recursive: true });

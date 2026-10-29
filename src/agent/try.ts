@@ -34,7 +34,7 @@ for (const s of run.trace) {
 }
 console.log("\nOutbox:", getOutbox());
 console.log(
-  `MODEL: ${process.env.OLLAMA_MODEL} | VIEW: ${process.env.AGENT_VIEW ?? "text"} | SHIELD: ${shieldOn ? "on" : "off"}`,
+  `MODEL: ${process.env.GEMINI_MODEL} | VIEW: ${process.env.AGENT_VIEW ?? "text"} | SHIELD: ${shieldOn ? "on" : "off"}`,
 );
 console.log(
   `ATTACK: ${attackId}/${payloadId} | LEAKED: ${run.leaked} | MANIPULATED: ${run.manipulated} | TASK DONE: ${run.completed}`,
