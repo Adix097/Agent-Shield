@@ -116,6 +116,13 @@ for (const s of scenarios) {
     reasons: r.reasons,
   });
   console.log(
+    `__AGENT_SHIELD_PROGRESS__${JSON.stringify({
+      done: rows.length,
+      total: scenarios.length,
+      label: s.name,
+    })}`,
+  );
+  console.log(
     `${s.malicious ? "ATTACK" : "LEGIT "}  ${(r.allowed ? "allowed" : "BLOCKED").padEnd(8)} ${s.name}`,
   );
 }
