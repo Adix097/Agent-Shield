@@ -147,9 +147,10 @@ npx tsx src/report.ts
 
 ## Run the dashboard
 
-Start the local dashboard with:
+Build and start the React dashboard with:
 
 ```bash
+npm run dashboard:build
 npm run dashboard
 ```
 
@@ -158,6 +159,8 @@ files under `results/` immediately, then streams progress and refreshed results
 when **Run Shield Eval**, **Run Baseline**, or **Run Gate Eval** is selected.
 The dashboard combines the checked-in shield, baseline, and email-gate
 benchmarks, including the known survivors and the encoded-secret gate gap.
+The dashboard source lives separately under `dashboard/`; the manual demo page
+remains at `docs/index.html`.
 
 The page evaluations start a local fixture server on port `4000` and use
 Playwright. The generated JSON and JSONL files under `results/` are local
