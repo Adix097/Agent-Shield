@@ -21,6 +21,13 @@ for (const a of ATTACKS) {
       exposedText: SURVIVES.test(strip(t)),
       exposedHtml: SURVIVES.test(strip(h)),
     });
+    console.log(
+      `__AGENT_SHIELD_PROGRESS__${JSON.stringify({
+        done: rows.length,
+        total: ATTACKS.length * Object.keys(PAYLOADS).length,
+        label: `${a.id} · ${p}`,
+      })}`,
+    );
   }
 }
 await mkdir("results", { recursive: true });

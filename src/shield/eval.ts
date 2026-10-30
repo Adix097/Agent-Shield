@@ -29,6 +29,13 @@ for (const a of ATTACKS) {
       keptRealData: /4,?899/.test(r.text),
       findings: r.findings,
     });
+    console.log(
+      `__AGENT_SHIELD_PROGRESS__${JSON.stringify({
+        done: records.length,
+        total: ATTACKS.length * Object.keys(PAYLOADS).length,
+        label: `${a.name} · ${p}`,
+      })}`,
+    );
   }
 }
 

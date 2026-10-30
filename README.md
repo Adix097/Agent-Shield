@@ -109,6 +109,7 @@ Install dependencies and create a local environment file:
 
 ```bash
 npm install
+npx playwright install chromium
 cp .env.example .env
 ```
 
@@ -143,6 +144,20 @@ npx tsx src/shield/gate-eval.ts
 # Combine the evaluation outputs into results/summary.json
 npx tsx src/report.ts
 ```
+
+## Run the dashboard
+
+Start the local dashboard with:
+
+```bash
+npm run dashboard
+```
+
+Open [http://localhost:5001](http://localhost:5001). It loads the existing
+files under `results/` immediately, then streams progress and refreshed results
+when **Run Shield Eval**, **Run Baseline**, or **Run Gate Eval** is selected.
+The dashboard combines the checked-in shield, baseline, and email-gate
+benchmarks, including the known survivors and the encoded-secret gate gap.
 
 The page evaluations start a local fixture server on port `4000` and use
 Playwright. The generated JSON and JSONL files under `results/` are local
