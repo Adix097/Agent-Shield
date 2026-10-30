@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const DOCS_DIR = path.join(ROOT, "docs");
+const DASHBOARD_DIR = path.join(ROOT, "dashboard", "dist");
 const RESULTS_DIR = path.join(ROOT, "results");
 const PROGRESS_PREFIX = "__AGENT_SHIELD_PROGRESS__";
 
@@ -83,9 +83,9 @@ function contentType(filePath: string) {
 function serveDashboard(req: http.IncomingMessage, res: http.ServerResponse) {
   const requestedPath = decodeURIComponent(new URL(req.url ?? "/", "http://localhost").pathname);
   const relativePath = requestedPath === "/" ? "index.html" : requestedPath.slice(1);
-  const filePath = path.resolve(DOCS_DIR, relativePath);
+  const filePath = path.resolve(DASHBOARD_DIR, relativePath);
 
-  if (!filePath.startsWith(DOCS_DIR + path.sep)) {
+  if (!filePath.startsWith(DASHBOARD_DIR + path.sep)) {
     sendJson(res, 403, { error: "forbidden" });
     return;
   }
